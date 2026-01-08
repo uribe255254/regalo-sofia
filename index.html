@@ -10,11 +10,11 @@
         body { margin: 0; background: #020205; overflow: hidden; font-family: 'Montserrat', sans-serif; touch-action: none; }
         canvas { display: block; }
 
-        /* Panel de Bloqueo optimizado para móvil */
+        /* Panel de Bloqueo */
         #panelMensaje {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            width: 80%; max-width: 300px; padding: 20px;
+            width: 80%; max-width: 300px; padding: 25px;
             background: rgba(5, 10, 25, 0.98); border: 2px solid #00f2ff;
             box-shadow: 0 0 25px rgba(0, 242, 255, 0.5); border-radius: 20px;
             text-align: center; color: white; z-index: 100;
@@ -29,7 +29,7 @@
             font-weight: bold; width: 100%;
         }
 
-        /* Botón de la Carta (Más grande para dedos) */
+        /* Botón de la Carta */
         #btnMostrarCarta {
             position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
             padding: 18px 30px; background: rgba(0, 255, 136, 0.1);
@@ -38,7 +38,7 @@
             font-weight: bold; width: 80%; max-width: 250px;
         }
 
-        /* Contenedor de la Carta adaptable */
+        /* Contenedor de la Carta */
         #cartaMensaje {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.96); color: white; z-index: 200;
@@ -50,9 +50,9 @@
         .contenido-carta {
             width: 85%; max-height: 80vh; overflow-y: auto; padding: 30px;
             background: rgba(10, 20, 30, 0.7); border: 1px solid #00f2ff;
-            border-radius: 25px; text-align: center;
+            border-radius: 25px; text-align: center; line-height: 1.6;
         }
-        .contenido-carta h3 { font-family: 'Birthstone Bounce'; font-size: 40px; color: #00f2ff; }
+        .contenido-carta h3 { font-family: 'Birthstone Bounce'; font-size: 45px; color: #00f2ff; margin-bottom: 15px; }
         
         #btnCerrarCarta {
             background: transparent; border: 1px solid #ff0066; color: #ff0066;
@@ -64,7 +64,7 @@
 
     <div id="panelMensaje">
         <h2>¡Casi, Sofia!</h2>
-        <p>Este regalo se abrirá el <b>28 de Enero</b>. ✨</p>
+        <p>Este regalo está protegido por un hechizo de tiempo.<br>Solo se abrirá el <b>28 de Enero</b>. ✨</p>
         <button id="btnCerrarPanel" onclick="cerrarPanel()">Entendido</button>
     </div>
 
@@ -74,53 +74,67 @@
         <div class="contenido-carta">
             <h3>¡Feliz cumple, Sofi! 🎂</h3>
             <p>Dicen que los amigos son la familia que uno elige, y definitivamente no me equivoqué contigo. Gracias por todas las risas y por estar ahí siempre.</p>
-            <p><b>Gracias por tenerme la confianza de contarme tus problemas.</b> Siempre estaré ahí para ti.</p>
-            <p>¡Disfruta mucho tu día!</p>
+            <p><b>Sobre todo, gracias por tenerme la confianza de contarme tus problemas.</b> Quiero que sepas que siempre voy a estar ahí para ti, en las buenas y en las malas.</p>
+            <p>Eres una persona increíble y te mereces un año lleno de éxitos.</p>
             <p><b>Te mando un fuerte abrazo,</b></p>
             <p>Uribe</p>
-            <button id="btnCerrarCarta" onclick="cerrarCarta()">Volver</button>
+            <button id="btnCerrarCarta" onclick="cerrarCarta()">Volver al Jardín</button>
         </div>
     </div>
 
     <script>
         let regaloAbierto = false;
         let flores = [];
-        let particulas = [];
-        let estrellas = [];
+        let particulasCaja = [];
+        let estrellasFondo = [];
         const fechaCumple = new Date('January 28, 2026 00:00:00'); 
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
-            for (let i = 0; i < 100; i++) {
-                estrellas.push({ x: random(width), y: random(height), s: random(1, 2) });
+            for (let i = 0; i < 150; i++) {
+                estrellasFondo.push({ x: random(width), y: random(height), s: random(1, 3) });
             }
         }
 
         function draw() {
             background(5, 5, 15);
             fill(255); noStroke();
-            for (let e of estrellas) ellipse(e.x, e.y, e.s);
+            for (let e of estrellasFondo) {
+                ellipse(e.x, e.y, e.s);
+            }
 
             if (!regaloAbierto) {
-                dibujarRegaloMovil();
+                dibujarRegaloNormal();
             } else {
-                for (let p of particulas) { p.update(); p.display(); }
+                for (let p of particulasCaja) { p.update(); p.display(); }
                 for (let f of flores) f.display();
             }
         }
 
-        function dibujarRegaloMovil() {
+        function dibujarRegaloNormal() {
             push();
-            translate(width / 2, height / 2);
-            let s = width < 500 ? 0.8 : 1.0; // Escalar si la pantalla es pequeña
+            translate(width / 2, height / 2 + sin(frameCount * 0.05) * 10);
+            let s = width < 500 ? 0.8 : 1.0;
             scale(s);
-            
-            // Caja
-            stroke(0, 242, 255); fill(20, 40, 80); rect(-60, -60, 120, 120, 10);
-            fill(0, 255, 136); noStroke(); rect(-10, -60, 20, 120);
-            
+
+            // Base de la caja
+            stroke(0, 242, 255); strokeWeight(2); fill(25, 45, 90);
+            rect(-60, -20, 120, 80, 2); 
+
+            // Tapa
+            fill(35, 60, 120); rect(-65, -45, 130, 30, 3);
+
+            // Listón vertical
+            noStroke(); fill(0, 255, 136); rect(-12, -45, 24, 105);
+
+            // Moño
+            stroke(0, 255, 136); strokeWeight(3); noFill();
+            bezier(0, -45, -50, -90, -50, -30, 0, -45); 
+            bezier(0, -45, 50, -90, 50, -30, 0, -45);  
+            fill(0, 255, 136); noStroke(); ellipse(0, -45, 15, 15);
+
             // Nombre
-            textAlign(CENTER); fill(255); textFont('Birthstone Bounce'); textSize(width < 500 ? 60 : 80);
+            textAlign(CENTER); fill(255); textFont('Birthstone Bounce'); textSize(80);
             text("Sofia", 0, -120);
 
             // Contador
@@ -131,20 +145,18 @@
                 let m = Math.floor((dif % (1000 * 60 * 60)) / (1000 * 60));
                 let s = Math.floor((dif % (1000 * 60)) / 1000);
                 fill(0, 242, 255); textSize(16);
-                text(`${h}h ${m}m ${s}s`, 0, 120);
-            } else {
-                fill(0, 255, 136); textSize(18); text("¡TOCA PARA ABRIR!", 0, 120);
+                text(`${h}h : ${m}m : ${s}s`, 0, 120);
             }
             pop();
         }
 
         function mousePressed() {
             if (!regaloAbierto) {
-                if (dist(mouseX, mouseY, width/2, height/2) < 100) {
+                if (dist(mouseX, mouseY, width/2, height/2) < 120) {
                     if (new Date() >= fechaCumple) {
                         regaloAbierto = true;
                         document.getElementById('btnMostrarCarta').style.display = 'block';
-                        for(let i=0; i<80; i++) particulas.push(new Particula(width/2, height/2));
+                        for(let i=0; i<100; i++) particulasCaja.push(new Particula(width/2, height/2));
                     } else {
                         document.getElementById('panelMensaje').classList.add('activo');
                     }
@@ -156,7 +168,6 @@
             }
         }
 
-        // Funciones de UI
         function cerrarPanel() { document.getElementById('panelMensaje').classList.remove('activo'); }
         function mostrarCarta() { document.getElementById('cartaMensaje').classList.add('activo'); }
         function cerrarCarta() { document.getElementById('cartaMensaje').classList.remove('activo'); }
@@ -164,27 +175,26 @@
         class Particula {
             constructor(x, y) {
                 this.p = createVector(x, y);
-                this.v = p5.Vector.random2D().mult(random(2, 6));
+                this.v = p5.Vector.random2D().mult(random(2, 7));
                 this.a = 255;
             }
             update() { this.p.add(this.v); this.a -= 5; }
-            display() { fill(0, 242, 255, this.a); ellipse(this.p.x, this.p.y, 4); }
+            display() { fill(0, 242, 255, this.a); noStroke(); ellipse(this.p.x, this.p.y, 4); }
         }
 
         class Flor {
             constructor(x, y) {
-                this.x = x; this.y = y; this.size = 0; this.max = random(60, 100);
+                this.x = x; this.y = y; this.size = 0; this.max = random(70, 110);
                 this.col = color(random(150, 255), 255, 255, 150);
             }
             display() {
                 if (this.size < this.max) this.size += 4;
                 push(); translate(this.x, this.y); rotate(frameCount * 0.02);
-                fill(this.col);
+                fill(this.col); noStroke();
                 for(let i=0; i<8; i++) { ellipse(0, this.size/3, this.size/4, this.size/1.2); rotate(PI/4); }
                 pop();
             }
         }
-
         function windowResized() { resizeCanvas(windowWidth, windowHeight); }
     </script>
 </body>
